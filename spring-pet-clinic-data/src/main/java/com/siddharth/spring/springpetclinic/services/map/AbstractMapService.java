@@ -1,5 +1,6 @@
 package com.siddharth.spring.springpetclinic.services.map;
 
+import com.siddharth.spring.springpetclinic.model.BaseEntity;
 import com.siddharth.spring.springpetclinic.services.CrudService;
 
 import java.util.HashMap;
@@ -7,7 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
+public abstract class AbstractMapService<T extends BaseEntity<ID>, ID> implements CrudService<T, ID> {
     protected Map<ID, T> map = new HashMap();
 
     @Override
@@ -20,13 +21,11 @@ public abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
         return map.get(id);
     }
 
-    public T save(ID id, T object) {
-        map.put(id, object);
+    @Override
+    public T save(T object) {
+        map.put(object.getId(), object);
         return object;
     }
-
-    @Override
-    abstract public T save(T object);
 
     @Override
     public void delete(T object) {

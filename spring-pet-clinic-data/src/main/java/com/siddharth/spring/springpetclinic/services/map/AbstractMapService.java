@@ -1,14 +1,12 @@
 package com.siddharth.spring.springpetclinic.services.map;
 
+import com.siddharth.spring.springpetclinic.model.BaseEntity;
 import com.siddharth.spring.springpetclinic.services.CrudService;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
-    protected Map<ID, T> map = new HashMap();
+public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> implements CrudService<T, ID> {
+    protected Map<Long, T> map = new HashMap();
 
     @Override
     public Set<T> findAll() {
@@ -20,13 +18,17 @@ public abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
         return map.get(id);
     }
 
-    public T save(ID id, T object) {
-        map.put(id, object);
+    @Override
+    public T save(T object) {
+        if (object == null) {
+            throw new RuntimeException("Object cannot be null.");
+        }
+        if (object.getId() == null) {
+            object.setId(getNextID());
+        }
+        map.put(object.getId(), object);
         return object;
     }
-
-    @Override
-    abstract public T save(T object);
 
     @Override
     public void delete(T object) {
@@ -36,5 +38,13 @@ public abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
     @Override
     public void deleteById(ID id) {
         map.remove(id);
+    }
+
+    private Long getNextID() {
+        if (map.size() == 0) {
+            return 1L;
+        }
+        Long maxId = Collections.max(map.keySet());
+        return maxId + 1;
     }
 }

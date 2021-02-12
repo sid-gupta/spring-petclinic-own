@@ -1,6 +1,7 @@
 package com.siddharth.spring.springpetclinic.bootstrap;
 
 import com.siddharth.spring.springpetclinic.model.Owner;
+import com.siddharth.spring.springpetclinic.model.Pet;
 import com.siddharth.spring.springpetclinic.model.PetType;
 import com.siddharth.spring.springpetclinic.model.Vet;
 import com.siddharth.spring.springpetclinic.services.OwnerService;
@@ -8,6 +9,8 @@ import com.siddharth.spring.springpetclinic.services.PetTypeService;
 import com.siddharth.spring.springpetclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -32,17 +35,33 @@ public class DataLoader implements CommandLineRunner {
         cat.setName("Cat");
         petTypeService.save(cat);
 
+        Pet petOne = new Pet();
+        petOne.setPetType(dog);
+        petOne.setName("rambo");
+        petOne.setBirthDay(LocalDate.now());
+
+        Pet petTwo = new Pet();
+        petTwo.setPetType(cat);
+        petTwo.setName("mike");
+        petTwo.setBirthDay(LocalDate.now());
+
         Owner owner = new Owner();
         owner.setFirstName("siddharth");
         owner.setLastName("gupta");
+        owner.setAddress("24 mangal nagar");
+        owner.setCity("sre");
+        owner.setTelephone("923483");
+        owner.getPets().add(petOne);
         ownerService.save(owner);
 
         owner = new Owner();
         owner.setFirstName("Pranati");
         owner.setLastName("Jain");
+        owner.setAddress("24 mangal nagar");
+        owner.setCity("sre");
+        owner.setTelephone("923483");
+        owner.getPets().add(petTwo);
         ownerService.save(owner);
-
-        System.out.println("Loaded Owners...");
 
         Vet vet = new Vet();
         vet.setFirstName("Rakshit");
@@ -53,7 +72,5 @@ public class DataLoader implements CommandLineRunner {
         vet.setFirstName("Shrey");
         vet.setLastName("Shah");
         vetService.save(vet);
-
-        System.out.println("Loaded Vets...");
     }
 }
